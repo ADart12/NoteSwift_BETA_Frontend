@@ -20,3 +20,22 @@ export const checkOut = async (employeeId) => {
 
     return res.data;
 };
+
+export const getMyAttendanceSummary = async (month) => {
+    const res = await api.get("attendence/my/summary", {
+        params: {
+            month,
+        },
+    });
+
+    return res.data;
+};
+
+export const getMyAttendenceHistory = async (range) => {
+    const res = await api.get("attendence/me/history", {
+        params: {
+            range
+        }
+    })
+    return res.data;
+}

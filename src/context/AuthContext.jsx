@@ -21,9 +21,9 @@ export const AuthProvider = ({ children }) => {
 
       const currentUser = res.data.user;
 
-      console.log("✅ CURRENT USER:", currentUser);
-      console.log("✅ ROLE:", currentUser?.role);
-      console.log("✅ DEPARTMENT:", currentUser?.department);
+      // console.log("✅ CURRENT USER:", currentUser);
+      // console.log("✅ ROLE:", currentUser?.role);
+      // console.log("✅ DEPARTMENT:", currentUser?.department);
 
       setUser(currentUser);
 

@@ -6,37 +6,11 @@ import {
   CalendarDays,
 } from "lucide-react";
 
-const AttendanceSummary = () => {
-  const stats = [
-    {
-      title: "Present",
-      value: "25",
-      subtitle: "Days present",
-      icon: CheckCircle,
-    },
-    {
-      title: "Absent",
-      value: "4",
-      subtitle: "Days absent",
-      icon: XCircle,
-    },
-    {
-      title: "Late",
-      value: "3",
-      subtitle: "Days late",
-      icon: Clock,
-    },
-    {
-      title: "Working Days",
-      value: "32",
-      subtitle: "Total working days",
-      icon: CalendarDays,
-    },
-  ];
+const AttendanceSummary = ({ attendenceStats}) => {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-      {stats.map((stat) => {
+      {attendenceStats.map((stat) => {
         const Icon = stat.icon;
 
         return (

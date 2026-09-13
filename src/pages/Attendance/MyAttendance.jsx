@@ -1,133 +1,89 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 
-import MyAttendanceHeader from "../../components/myAttendanceCompo/MyAttendanceHeader";
 import AttendanceSummary from "../../components/myAttendanceCompo/AttendanceSummary";
 import AttendanceFilters from "../../components/myAttendanceCompo/AttendanceFilters";
 import AttendanceChart from "../../components/myAttendanceCompo/AttendanceChart";
 import AttendanceTable from "../../components/myAttendanceCompo/AttendanceTable";
-import AttendancePagination from "../../components/myAttendanceCompo/AttendancePagination";
+import Header from "../../components/common/Header";
+import { CalendarDays } from "lucide-react";
+import Pagination from "../../components/common/Pagination";
+
+import {
+  getMyAttendanceSummary,
+  getMyAttendenceHistory,
+} from "../../services/attendenceServices";
+
+import { myAttendenceStats } from "../../Data/attendance";
 
 const MyAttendance = () => {
-  const [search, setSearch] = useState("");
-  const [month, setMonth] = useState("2026-08");
   const [status, setStatus] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
+  const [summary, setSummary] = useState(null);
+  const [attendanceData, setAttendanceData] = useState([]);
 
   const recordsPerPage = 5;
 
-  const attendanceData = [
-    {
-      id: 1,
-      date: "31 Aug 2026",
-      checkIn: "09:30 AM",
-      checkOut: "04:30 PM",
-      workingHours: "7h 00m",
-      status: "Present",
-    },
-    {
-      id: 2,
-      date: "30 Aug 2026",
-      checkIn: "09:45 AM",
-      checkOut: "04:30 PM",
-      workingHours: "6h 45m",
-      status: "Late",
-    },
-    {
-      id: 3,
-      date: "29 Aug 2026",
-      checkIn: "09:25 AM",
-      checkOut: "04:35 PM",
-      workingHours: "7h 10m",
-      status: "Present",
-    },
-    {
-      id: 4,
-      date: "28 Aug 2026",
-      checkIn: "--",
-      checkOut: "--",
-      workingHours: "--",
-      status: "Absent",
-    },
-    {
-      id: 5,
-      date: "27 Aug 2026",
-      checkIn: "09:20 AM",
-      checkOut: "04:40 PM",
-      workingHours: "7h 20m",
-      status: "Present",
-    },
-    {
-      id: 6,
-      date: "26 Aug 2026",
-      checkIn: "09:35 AM",
-      checkOut: "04:30 PM",
-      workingHours: "6h 55m",
-      status: "Present",
-    },
-    {
-      id: 7,
-      date: "25 Aug 2026",
-      checkIn: "09:50 AM",
-      checkOut: "04:30 PM",
-      workingHours: "6h 40m",
-      status: "Late",
-    },
-    {
-      id: 8,
-      date: "24 Aug 2026",
-      checkIn: "09:28 AM",
-      checkOut: "04:32 PM",
-      workingHours: "7h 04m",
-      status: "Present",
-    },
-    {
-      id: 9,
-      date: "23 Aug 2026",
-      checkIn: "09:30 AM",
-      checkOut: "04:30 PM",
-      workingHours: "7h 00m",
-      status: "Present",
-    },
-    {
-      id: 10,
-      date: "22 Aug 2026",
-      checkIn: "--",
-      checkOut: "--",
-      workingHours: "--",
-      status: "Absent",
-    },
-    {
-      id: 11,
-      date: "21 Aug 2026",
-      checkIn: "09:40 AM",
-      checkOut: "04:30 PM",
-      workingHours: "6h 50m",
-      status: "Late",
-    },
-    {
-      id: 12,
-      date: "20 Aug 2026",
-      checkIn: "09:25 AM",
-      checkOut: "04:35 PM",
-      workingHours: "7h 10m",
-      status: "Present",
-    },
-  ];
+  const getCurrentMonth = () => {
+    const date = new Date();
 
+    return `${date.getFullYear()}-${String(
+      date.getMonth() + 1
+    ).padStart(2, "0")}`;
+  };
+
+  const [month, setMonth] = useState(getCurrentMonth());
+
+  // Summary - always current month
+  useEffect(() => {
+    const fetchSummary = async () => {
+      try {
+        const data = await getMyAttendanceSummary(getCurrentMonth());
+
+        setSummary(data.summary);
+      } catch (error) {
+        console.error("Failed to fetch attendance summary:", error);
+      }
+    };
+
+    fetchSummary();
+  }, []);
+
+  const attendenceStats = myAttendenceStats(summary);
+
+  // Attendance history
+  const attendenceHistory = async (selectedMonth = null) => {
+    try {
+      const range = selectedMonth || "2w";
+
+      const data = await getMyAttendenceHistory(range);
+
+      setAttendanceData(data.attendanceHistory);
+    } catch (error) {
+      console.error(
+        "Error while getting my attendance history:",
+        error.message
+      );
+    }
+  };
+
+  // Initial load → last 2 weeks
+  useEffect(() => {
+    attendenceHistory();
+  }, []);
+
+
+
+  // Status filter only
   const filteredAttendance = useMemo(() => {
     return attendanceData.filter((record) => {
-      const searchValue = search.toLowerCase();
+      const recordStatus = String(record.status || "").toLowerCase();
 
-      const matchesSearch =
-        record.date.toLowerCase().includes(searchValue) ||
-        record.status.toLowerCase().includes(searchValue);
-
-      const matchesStatus =
-        status === "All" || record.status === status;
-
-      return matchesSearch && matchesStatus;
+      return (
+        status === "All" ||
+        recordStatus === status.toLowerCase()
+      );
     });
-  }, [search, status]);
+  }, [attendanceData, status]);
 
   const totalPages = Math.max(
     1,
@@ -139,37 +95,61 @@ const MyAttendance = () => {
     currentPage * recordsPerPage
   );
 
-  const handleSearchChange = (value) => {
-    setSearch(value);
-    setCurrentPage(1);
-  };
-
+  // Month change
   const handleMonthChange = (value) => {
     setMonth(value);
     setCurrentPage(1);
+
+    attendenceHistory(value);
   };
 
+  // Status change
   const handleStatusChange = (value) => {
     setStatus(value);
     setCurrentPage(1);
   };
 
+  // Reset
   const handleReset = () => {
-    setSearch("");
-    setMonth("2026-08");
+    setMonth(getCurrentMonth());
     setStatus("All");
     setCurrentPage(1);
+
+    // Back to default 2 weeks
+    attendenceHistory();
   };
 
   return (
     <div className="space-y-6">
-      <MyAttendanceHeader />
 
-      <AttendanceSummary />
+      <Header
+        title="My Attendance"
+        titleClassName="text-3xl"
+        subtitle="Track your attendance and working hours"
+        rightContent={
+          <button className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-5 py-3 text-gray-600 shadow-sm">
+            <CalendarDays className="h-5 w-5 text-blue-600" />
+
+            <span>
+              {new Date().toLocaleString("en-US", {
+                month: "long",
+                year: "numeric",
+              })}
+            </span>
+          </button>
+        }
+      />
+
+      <AttendanceSummary
+        summary={summary}
+        attendenceStats={attendenceStats}
+      />
+
+      <AttendanceChart 
+        summary={summary}
+      />
 
       <AttendanceFilters
-        search={search}
-        setSearch={handleSearchChange}
         month={month}
         setMonth={handleMonthChange}
         status={status}
@@ -177,23 +157,18 @@ const MyAttendance = () => {
         onReset={handleReset}
       />
 
-      <AttendanceChart />
-
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-        <AttendanceTable attendance={paginatedAttendance} />
 
-        <AttendancePagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPrevious={() =>
-            setCurrentPage((page) => Math.max(1, page - 1))
-          }
-          onNext={() =>
-            setCurrentPage((page) =>
-              Math.min(totalPages, page + 1)
-            )
-          }
+        <AttendanceTable
+          attendance={paginatedAttendance}
         />
+
+        <Pagination
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalPages={totalPages}
+        />
+
       </div>
     </div>
   );

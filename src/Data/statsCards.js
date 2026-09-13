@@ -7,6 +7,7 @@ import {
   CircleCheckBig,
   Clock3,
   CircleX,
+
 } from "lucide-react";
 
 export const getDashboardStats = (summary) => [
@@ -104,5 +105,56 @@ export const getLeaveStats = (summary) => [
     subColor: "text-red-500",
     iconBg: "bg-red-100",
     iconColor: "text-red-600",
+  },
+];
+
+
+export const getAttendanceStats = (summary) => [
+  {
+    title: "Present",
+    value: summary?.present ?? 0,
+    subtitle: "Days present",
+    icon: CircleCheckBig,
+    iconBg: "bg-blue-50",
+    iconColor: "text-blue-600",
+    border: "border-gray-200",
+    valueColor: "text-slate-900",
+    subColor: "text-slate-400",
+  },
+
+  {
+    title: "Absent",
+    value: summary?.absent ?? 0,
+    subtitle: "Days absent",
+    icon: CircleX,
+    iconBg: "bg-blue-50",
+    iconColor: "text-blue-600",
+    border: "border-gray-200",
+    valueColor: "text-slate-900",
+    subColor: "text-slate-400",
+  },
+
+  {
+    title: "Late",
+    value: summary?.late ?? 0,
+    subtitle: "Days late",
+    icon: Clock3,
+    iconBg: "bg-blue-50",
+    iconColor: "text-blue-600",
+    border: "border-gray-200",
+    valueColor: "text-slate-900",
+    subColor: "text-slate-400",
+  },
+
+  {
+    title: "Working Days",
+    value: summary?.workingDays ?? 0,
+    subtitle: "Total working days",
+    icon: CalendarDays,
+    iconBg: "bg-blue-50",
+    iconColor: "text-blue-600",
+    border: "border-gray-200",
+    valueColor: "text-slate-900",
+    subColor: "text-slate-400",
   },
 ];

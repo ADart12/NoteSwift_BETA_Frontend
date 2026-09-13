@@ -4,23 +4,14 @@ import PersonalInfo from "../../components/profileCompo/PersonalInfo";
 import ProfessionalInfo from "../../components/profileCompo/ProfessionalInfo";
 import ProfileInfo from "../../components/profileCompo/ProfileInfo";
 import { Save, X } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
 
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
 
-  const [profile, setProfile] = useState({
-    name: "Aarshi",
-    email: "joshiaarshi9@gmail.com",
-    phone: "9871420414",
-    dateOfBirth: "",
-    employeeId: "HR-006",
-    designation: "Full Stack Developer",
-    department: "Human Resources",
-    joiningDate: "2026-08-23",
-    address: "",
-    city: "",
-    country: "India",
-  });
+    const { user, setUser } = useAuth();
+
+  const [profile, setProfile] = useState(user);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

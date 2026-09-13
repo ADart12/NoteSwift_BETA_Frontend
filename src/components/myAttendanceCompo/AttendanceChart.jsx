@@ -6,8 +6,9 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const AttendanceChart = () => {
-  const attendancePercentage = 85;
+const AttendanceChart = ({summary }) => {
+  console.log("attendence overview",summary)
+  const attendancePercentage = summary?.present;
 
   const data = [
     {

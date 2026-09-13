@@ -1,4 +1,5 @@
 import React from "react";
+import AttendanceRow from "./AttendenceRow";
 
 const AttendanceTable = ({ attendance }) => {
   const getStatusStyle = (status) => {
@@ -64,47 +65,18 @@ const AttendanceTable = ({ attendance }) => {
               </th>
             </tr>
           </thead>
-
           <tbody className="divide-y divide-gray-100">
             {attendance.length > 0 ? (
               attendance.map((record) => (
-                <tr
-                  key={record.id}
-                  className="hover:bg-gray-50 transition-colors"
-                >
-                  <td className="px-5 py-4 text-sm font-medium text-gray-700">
-                    {record.date}
-                  </td>
-
-                  <td className="px-5 py-4 text-sm text-gray-600">
-                    {record.checkIn}
-                  </td>
-
-                  <td className="px-5 py-4 text-sm text-gray-600">
-                    {record.checkOut}
-                  </td>
-
-                  <td className="px-5 py-4 text-sm text-gray-600">
-                    {record.workingHours}
-                  </td>
-
-                  <td className="px-5 py-4">
-                    <span
-                      className={`inline-flex px-3 py-1.5 rounded-full text-xs font-medium ${getStatusStyle(
-                        record.status
-                      )}`}
-                    >
-                      {record.status}
-                    </span>
-                  </td>
-                </tr>
+                <AttendanceRow
+                  key={record._id}
+                  record={record}
+                  getStatusStyle={getStatusStyle}
+                />
               ))
             ) : (
               <tr>
-                <td
-                  colSpan="5"
-                  className="px-5 py-12 text-center"
-                >
+                <td colSpan="5" className="px-5 py-12 text-center">
                   <p className="text-sm text-gray-500">
                     No attendance records found
                   </p>

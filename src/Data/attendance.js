@@ -1,3 +1,10 @@
+import {
+  CheckCircle,
+  XCircle,
+  Clock,
+  CalendarDays,
+} from "lucide-react";
+
 export const attendance = [
   {
     id: "EMP001",
@@ -34,5 +41,33 @@ export const attendance = [
     checkOut: "06:05 PM",
     workingHours: "8h 45m",
     status: "Present",
+  },
+];
+
+
+export const myAttendenceStats = (summary) => [
+  {
+    title: "Present",
+    value: summary?.present,
+    subtitle: "Days present",
+    icon: CheckCircle,
+  },
+  {
+    title: "Absent",
+    value: summary?.absent,
+    subtitle: "Days absent",
+    icon: XCircle,
+  },
+  {
+    title: "Late",
+    value: summary?.late,
+    subtitle: "Days late",
+    icon: Clock,
+  },
+  {
+    title: "Working Days",
+    value: summary?.workingDays,
+    subtitle: "Total working days",
+    icon: CalendarDays,
   },
 ];
