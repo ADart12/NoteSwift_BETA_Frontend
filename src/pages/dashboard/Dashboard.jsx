@@ -9,11 +9,17 @@ import TodayAttendance from "../../components/dashboardCommon/TodayAttendance";
 
 import { useEffect, useState } from "react";
 
-import { getDashboardStats } from "../../Data/statsCards";
+import {
+  getDashboardStats,
+  employeeStats,
+} from "../../Data/statsCards";
+
 import {
   getDashboardSummary,
   getAttendanceOverview,
 } from "../../services/dashboardSummary";
+import EmployeeTimeline from "../../components/dashboardCommon/EmployeeTimeline";
+import EmployeeMonthlyAttendance from "../../components/dashboardCommon/EmployeeMonthlyAttendance ";
 
 
 const Dashboard = () => {
@@ -26,15 +32,17 @@ const Dashboard = () => {
   // Department
   // =========================
 
-  const departmentCode = user?.department?.code?.trim().toLowerCase();
+  const departmentCode =
+    user?.department?.code?.trim().toLowerCase();
 
 
   // =========================
   // Fetch Attendance Overview
+  // Only Admin / Manager
   // =========================
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || user.role === "employee") return;
 
     const fetchAttendanceOverview = async () => {
       try {
@@ -55,10 +63,11 @@ const Dashboard = () => {
 
   // =========================
   // Fetch Dashboard Summary
+  // Only Admin / Manager
   // =========================
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || user.role === "employee") return;
 
     const fetchSummary = async () => {
       try {
@@ -77,7 +86,16 @@ const Dashboard = () => {
   }, [user]);
 
 
+  // =========================
+  // Admin / Manager Stats
+  // =========================
+
   const stats = getDashboardStats(summary);
+
+
+  //Employee stats 
+
+
 
 
   // =========================
@@ -209,13 +227,15 @@ const Dashboard = () => {
       ========================= */}
 
       {user.role === "manager" &&
-        (departmentCode === "human resources" ||
-          departmentCode === "hr") && (
-            
+        (
+          departmentCode === "human resources" ||
+          departmentCode === "hr"
+        ) && (
           <>
             <StatsCards stats={stats} />
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
               <AttendanceSummary
                 summary={summary}
               />
@@ -225,6 +245,7 @@ const Dashboard = () => {
               />
 
             </div>
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
               <TodayAttendance />
@@ -242,15 +263,15 @@ const Dashboard = () => {
 
       {user.role === "employee" && (
         <>
+          {/* Employee Personal Stats */}
+          <StatsCards stats={employeeStats()} />
+
+          {/* Employee Dashboard - Next */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-            <AttendanceSummary
-              summary={summary}
-            />
+            <EmployeeTimeline />
 
-            <AttendanceChart
-              overview={overview}
-            />
+            <EmployeeMonthlyAttendance />
 
           </div>
         </>

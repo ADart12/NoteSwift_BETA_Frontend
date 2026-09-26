@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import ProfileHeader from "../../components/profileCompo/ProfileHeader";
 import PersonalInfo from "../../components/profileCompo/PersonalInfo";
 import ProfessionalInfo from "../../components/profileCompo/ProfessionalInfo";
 import ProfileInfo from "../../components/profileCompo/ProfileInfo";
 import { Save, X } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { getProfile } from "../../services/profileServices";
 
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
 
-    const { user, setUser } = useAuth();
+  const { user, setUser } = useAuth();
 
   const [profile, setProfile] = useState(user);
 
@@ -34,10 +35,27 @@ const Profile = () => {
     setIsEditing(false);
   };
 
+
+
+
+  const getMyProfile = async () => {
+
+    const data = await getProfile();
+    console.log(data.user);
+    setProfile(data.user);
+  }
+
+  useEffect(() => {
+    getMyProfile();
+  }, [])
+
   return (
     <div className="w-full min-w-0 bg-gray-100">
       {/* Profile Header */}
-      <ProfileHeader onEdit={handleEdit} />
+      <ProfileHeader
+        profile={profile}
+        onEdit={handleEdit}
+      />
 
       {/* Profile Information */}
       <div className="mt-4 sm:mt-5 md:mt-6 space-y-4 sm:space-y-5 md:space-y-6">

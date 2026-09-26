@@ -29,8 +29,8 @@ const PersonalInfo = ({ profile, isEditing, onChange }) => {
 
             <input
               type="text"
-              name="name"
-              value={profile.name}
+              name="fullName"
+              value={profile?.fullName || ""}
               onChange={onChange}
               disabled={!isEditing}
               className="w-full min-w-0 pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none focus:border-indigo-500 disabled:bg-gray-50 disabled:text-gray-500"
@@ -53,7 +53,7 @@ const PersonalInfo = ({ profile, isEditing, onChange }) => {
             <input
               type="email"
               name="email"
-              value={profile.email}
+              value={profile?.email || ""}
               onChange={onChange}
               disabled={!isEditing}
               className="w-full min-w-0 pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none focus:border-indigo-500 disabled:bg-gray-50 disabled:text-gray-500"
@@ -76,7 +76,7 @@ const PersonalInfo = ({ profile, isEditing, onChange }) => {
             <input
               type="text"
               name="phone"
-              value={profile.phone}
+              value={profile?.phone || ""}
               onChange={onChange}
               disabled={!isEditing}
               className="w-full min-w-0 pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none focus:border-indigo-500 disabled:bg-gray-50 disabled:text-gray-500"
@@ -99,7 +99,7 @@ const PersonalInfo = ({ profile, isEditing, onChange }) => {
             <input
               type="date"
               name="dateOfBirth"
-              value={profile.dateOfBirth}
+              value={profile?.dateOfBirth || ""}
               onChange={onChange}
               disabled={!isEditing}
               className="w-full min-w-0 pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none focus:border-indigo-500 disabled:bg-gray-50 disabled:text-gray-500"

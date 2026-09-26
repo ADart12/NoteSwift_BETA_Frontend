@@ -14,6 +14,14 @@ const LeaveRequestRow = ({ request }) => {
     }
   };
 
+  const formatDate = (date) => {
+    return new Date(date).toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
   return (
     <tr className="hover:bg-gray-50 transition">
       <td className="px-6 py-4 text-sm font-medium text-gray-800">
@@ -21,11 +29,11 @@ const LeaveRequestRow = ({ request }) => {
       </td>
 
       <td className="px-6 py-4 text-sm text-gray-600">
-        {request.from}
+        {formatDate(request.fromDate)}
       </td>
 
       <td className="px-6 py-4 text-sm text-gray-600">
-        {request.to}
+        {formatDate(request.toDate)}
       </td>
 
       <td className="px-6 py-4 text-sm text-gray-600">

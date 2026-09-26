@@ -1,7 +1,7 @@
 import React from "react";
 import { Camera, Edit } from "lucide-react";
 
-const ProfileHeader = ({ onEdit }) => {
+const ProfileHeader = ({ profile, onEdit }) => {
   return (
     <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 sm:p-5 md:p-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
@@ -10,7 +10,12 @@ const ProfileHeader = ({ onEdit }) => {
           <div className="relative shrink-0">
             <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-indigo-100 flex items-center justify-center overflow-hidden">
               <span className="text-xl sm:text-2xl font-semibold text-indigo-600">
-                AJ
+                {
+                  profile.fullName
+                    .split(" ")
+                    .map(name => name. toUpperCase().charAt(0))
+                    .join("")
+                }
               </span>
             </div>
 
@@ -25,15 +30,15 @@ const ProfileHeader = ({ onEdit }) => {
 
           <div className="min-w-0">
             <h1 className="text-lg sm:text-xl font-semibold text-gray-800 truncate">
-              Aarshista Joshi
+              {profile.fullName}
             </h1>
 
             <p className="text-sm text-gray-500 mt-1 truncate">
-              Software Engineer
+              {profile.designation}
             </p>
 
             <p className="text-xs sm:text-sm text-gray-400 mt-1 truncate">
-              Engineering Department
+              {profile.department.name}
             </p>
           </div>
         </div>

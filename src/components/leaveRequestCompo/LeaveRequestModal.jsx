@@ -33,13 +33,13 @@ const LeaveRequestModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-3 sm:p-4">
-      
+
       {/* Modal */}
       <div className="bg-white w-full max-w-lg max-h-[95vh] sm:max-h-[90vh] rounded-xl sm:rounded-2xl shadow-xl overflow-hidden flex flex-col">
 
         {/* ================= HEADER ================= */}
         <div className="flex items-start justify-between gap-4 px-4 sm:px-6 py-4 sm:py-5 border-b border-gray-100 shrink-0">
-          
+
           <div className="min-w-0">
             <h2 className="text-base sm:text-lg font-semibold text-gray-800">
               Apply for Leave
@@ -56,7 +56,7 @@ const LeaveRequestModal = ({
             aria-label="Close modal"
             className="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-50 text-xl transition"
           >
-            ×
+
           </button>
 
         </div>
@@ -66,7 +66,7 @@ const LeaveRequestModal = ({
           onSubmit={onSubmit}
           className="p-4 sm:p-6 space-y-4 sm:space-y-5 overflow-y-auto"
         >
-          
+
           {/* Leave Type */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -93,16 +93,20 @@ const LeaveRequestModal = ({
                 transition
               "
             >
-              <option>Casual Leave</option>
-              <option>Sick Leave</option>
-              <option>Earned Leave</option>
-              <option>Emergency Leave</option>
+              <option value="Casual">Casual Leave</option>
+              <option value="Sick">Sick Leave</option>
+              <option value="Earned">Earned Leave</option>
+              <option value="Emergency">Emergency Leave</option>
+              <option value="Maternity">Maternity Leave</option>
+              <option value="Paternity">Paternity Leave</option>
+              <option value="Unpaid">Unpaid Leave</option>
+              <option value="Other">Other</option>
             </select>
           </div>
 
           {/* Dates */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            
+
             {/* From */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -111,7 +115,7 @@ const LeaveRequestModal = ({
 
               <input
                 type="date"
-                name="from"
+                name="fromDate"
                 value={formData.from}
                 onChange={handleChange}
                 required
@@ -140,7 +144,7 @@ const LeaveRequestModal = ({
 
               <input
                 type="date"
-                name="to"
+                name="toDate"
                 value={formData.to}
                 onChange={handleChange}
                 required
@@ -208,7 +212,7 @@ const LeaveRequestModal = ({
 
           {/* ================= BUTTONS ================= */}
           <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2.5 sm:gap-3 pt-1 sm:pt-2">
-            
+
             <button
               type="button"
               onClick={() => setShowModal(false)}
@@ -253,7 +257,7 @@ const LeaveRequestModal = ({
         </form>
 
       </div>
-      
+
     </div>
   );
 };

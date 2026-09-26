@@ -81,7 +81,7 @@ const ProfessionalInfo = ({ profile, isEditing, onChange }) => {
             <input
               type="text"
               name="department"
-              value={profile.department}
+              value={profile.department.name}
               onChange={onChange}
               disabled={!isEditing}
               className="w-full min-w-0 pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none focus:border-indigo-500 disabled:bg-gray-50 disabled:text-gray-500"
@@ -104,7 +104,7 @@ const ProfessionalInfo = ({ profile, isEditing, onChange }) => {
             <input
               type="date"
               name="joiningDate"
-              value={profile.joiningDate}
+              value={profile?.joiningDate?.split("T")[0] || ""}
               onChange={onChange}
               disabled={!isEditing}
               className="w-full min-w-0 pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none focus:border-indigo-500 disabled:bg-gray-50 disabled:text-gray-500"

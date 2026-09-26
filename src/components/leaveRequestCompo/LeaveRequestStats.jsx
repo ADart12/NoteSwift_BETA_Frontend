@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 
 const LeaveRequestStats = ({ leaveRequests }) => {
+  
   const pending = leaveRequests.filter(
     (request) => request.status === "Pending"
   ).length;

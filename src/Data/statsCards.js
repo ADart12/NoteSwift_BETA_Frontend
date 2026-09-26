@@ -7,7 +7,8 @@ import {
   CircleCheckBig,
   Clock3,
   CircleX,
-
+  CalendarCheck,
+  Timer
 } from "lucide-react";
 
 export const getDashboardStats = (summary) => [
@@ -156,5 +157,68 @@ export const getAttendanceStats = (summary) => [
     border: "border-gray-200",
     valueColor: "text-slate-900",
     subColor: "text-slate-400",
+  },
+];
+
+
+export const employeeStats = (data = {}) => [
+  {
+    title: "Today's Status",
+    value: data.todayStatus ?? "Present",
+    subtitle: data.checkIn
+      ? `Checked in at ${data.checkIn}`
+      : "Not checked in",
+
+    icon: CalendarCheck,
+    iconBg: "bg-green-100",
+    iconColor: "text-green-600",
+    border: "border-green-100",
+    valueColor: "text-green-600",
+    subColor: "text-gray-500",
+  },
+
+  {
+    title: "Working Hours",
+    value: data.workingHours ?? "0h 0m",
+    subtitle: "as of now",
+
+    icon: Clock3,
+    iconBg: "bg-purple-100",
+    iconColor: "text-purple-600",
+    border: "border-purple-100",
+    valueColor: "text-purple-600",
+    subColor: "text-gray-500",
+  },
+
+  {
+    title: "Late Today",
+    value: data.lateMinutes != null
+      ? `${data.lateMinutes} mins`
+      : "0 mins",
+    subtitle: data.officeStartTime
+      ? `Office time: ${data.officeStartTime}`
+      : "Office time",
+
+    icon: Timer,
+    iconBg: "bg-orange-100",
+    iconColor: "text-orange-500",
+    border: "border-orange-100",
+    valueColor: "text-orange-500",
+    subColor: "text-gray-500",
+  },
+
+  {
+    title: "This Month",
+    value: data.monthlyPresent
+      ? `${data.monthlyPresent} / ${data.workingDays}`
+      : "0 / 0",
+    subtitle: "Days Present",
+
+    icon: CalendarDays,
+    iconBg: "bg-blue-100",
+    iconColor: "text-blue-600",
+    border: "border-blue-100",
+    valueColor: "text-blue-600",
+    subColor: "text-gray-500",
   },
 ];

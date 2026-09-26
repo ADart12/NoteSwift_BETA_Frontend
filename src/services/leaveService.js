@@ -40,3 +40,13 @@ export const reject = async(id) => {
   })
   return res.data;
 }
+
+export const getMyLeaveRequest = async (page) => {
+  const res = await api.get(`/leave/me?page=${page}`);
+  return res.data;
+};
+
+export const applyForLeave = async(formData) => {
+  const res = await api.post("/leave/", formData);
+  return res.data;
+}
