@@ -1,4 +1,3 @@
-import React from "react";
 import {
   PieChart,
   Pie,
@@ -6,18 +5,17 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const AttendanceChart = ({summary }) => {
-  console.log("attendence overview",summary)
-  const attendancePercentage = summary?.present;
+const AttendanceChart = ({ summary }) => {
+  const percentage = Number(summary?.attendancePercentage ?? 0);
 
   const data = [
     {
       name: "Present",
-      value: attendancePercentage,
+      value: percentage,
     },
     {
       name: "Absent",
-      value: 100 - attendancePercentage,
+      value: Math.max(0, 100 - percentage),
     },
   ];
 
@@ -30,7 +28,7 @@ const AttendanceChart = ({summary }) => {
         </h2>
 
         <p className="text-sm text-gray-500 mt-1">
-          Your total attendance percentage
+          Your monthly attendance percentage
         </p>
       </div>
 
@@ -58,7 +56,7 @@ const AttendanceChart = ({summary }) => {
         {/* Center Percentage */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
           <span className="text-3xl font-bold text-gray-800">
-            {attendancePercentage}%
+            {percentage}%
           </span>
 
           <span className="text-sm text-gray-500 mt-1">
@@ -71,12 +69,12 @@ const AttendanceChart = ({summary }) => {
       <div className="flex justify-center items-center gap-6 mt-1">
         <div className="flex items-center gap-2 text-sm text-gray-500">
           <span className="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
-          Present
+          Present ({percentage}%)
         </div>
 
         <div className="flex items-center gap-2 text-sm text-gray-500">
           <span className="w-2.5 h-2.5 rounded-full bg-gray-200"></span>
-          Absent
+          Absent ({Math.max(0, 100 - percentage)}%)
         </div>
       </div>
     </div>

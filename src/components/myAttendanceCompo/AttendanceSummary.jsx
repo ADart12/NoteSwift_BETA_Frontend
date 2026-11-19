@@ -1,13 +1,4 @@
-import React from "react";
-import {
-  CheckCircle,
-  XCircle,
-  Clock,
-  CalendarDays,
-} from "lucide-react";
-
-const AttendanceSummary = ({ attendenceStats}) => {
-
+const AttendanceSummary = ({ attendenceStats = [] }) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
       {attendenceStats.map((stat) => {
@@ -34,7 +25,7 @@ const AttendanceSummary = ({ attendenceStats}) => {
               </div>
 
               <div className="w-11 h-11 rounded-lg bg-blue-50 flex items-center justify-center">
-                <Icon size={21} className="text-blue-600" />
+                {Icon && <Icon size={21} className="text-blue-600" />}
               </div>
             </div>
           </div>

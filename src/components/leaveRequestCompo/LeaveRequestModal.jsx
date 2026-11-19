@@ -1,4 +1,4 @@
-import React from "react";
+import { X } from "lucide-react";
 
 const LeaveRequestModal = ({
   showModal,
@@ -19,10 +19,10 @@ const LeaveRequestModal = ({
   };
 
   const calculateDays = () => {
-    if (!formData.from || !formData.to) return 0;
+    if (!formData.fromDate || !formData.toDate) return 0;
 
-    const fromDate = new Date(formData.from);
-    const toDate = new Date(formData.to);
+    const fromDate = new Date(formData.fromDate);
+    const toDate = new Date(formData.toDate);
 
     const difference = toDate - fromDate;
 
@@ -33,13 +33,10 @@ const LeaveRequestModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-3 sm:p-4">
-
       {/* Modal */}
       <div className="bg-white w-full max-w-lg max-h-[95vh] sm:max-h-[90vh] rounded-xl sm:rounded-2xl shadow-xl overflow-hidden flex flex-col">
-
         {/* ================= HEADER ================= */}
         <div className="flex items-start justify-between gap-4 px-4 sm:px-6 py-4 sm:py-5 border-b border-gray-100 shrink-0">
-
           <div className="min-w-0">
             <h2 className="text-base sm:text-lg font-semibold text-gray-800">
               Apply for Leave
@@ -54,11 +51,10 @@ const LeaveRequestModal = ({
             type="button"
             onClick={() => setShowModal(false)}
             aria-label="Close modal"
-            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-50 text-xl transition"
+            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition"
           >
-
+            <X size={20} />
           </button>
-
         </div>
 
         {/* ================= FORM ================= */}
@@ -66,7 +62,6 @@ const LeaveRequestModal = ({
           onSubmit={onSubmit}
           className="p-4 sm:p-6 space-y-4 sm:space-y-5 overflow-y-auto"
         >
-
           {/* Leave Type */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -77,21 +72,7 @@ const LeaveRequestModal = ({
               name="leaveType"
               value={formData.leaveType}
               onChange={handleChange}
-              className="
-                w-full
-                border border-gray-200
-                rounded-lg
-                px-4
-                py-2.5
-                text-sm
-                text-gray-700
-                bg-white
-                outline-none
-                focus:border-indigo-500
-                focus:ring-2
-                focus:ring-indigo-100
-                transition
-              "
+              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 bg-white outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition"
             >
               <option value="Casual">Casual Leave</option>
               <option value="Sick">Sick Leave</option>
@@ -106,65 +87,37 @@ const LeaveRequestModal = ({
 
           {/* Dates */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
             {/* From */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                From
+                From Date
               </label>
 
               <input
                 type="date"
                 name="fromDate"
-                value={formData.from}
+                value={formData.fromDate || ""}
                 onChange={handleChange}
                 required
-                className="
-                  w-full
-                  border border-gray-200
-                  rounded-lg
-                  px-4
-                  py-2.5
-                  text-sm
-                  text-gray-700
-                  outline-none
-                  focus:border-indigo-500
-                  focus:ring-2
-                  focus:ring-indigo-100
-                  transition
-                "
+                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition"
               />
             </div>
 
             {/* To */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                To
+                To Date
               </label>
 
               <input
                 type="date"
                 name="toDate"
-                value={formData.to}
+                value={formData.toDate || ""}
                 onChange={handleChange}
                 required
-                className="
-                  w-full
-                  border border-gray-200
-                  rounded-lg
-                  px-4
-                  py-2.5
-                  text-sm
-                  text-gray-700
-                  outline-none
-                  focus:border-indigo-500
-                  focus:ring-2
-                  focus:ring-indigo-100
-                  transition
-                "
+                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-700 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition"
               />
             </div>
-
           </div>
 
           {/* Leave Duration */}
@@ -186,78 +139,34 @@ const LeaveRequestModal = ({
 
             <textarea
               name="reason"
-              value={formData.reason}
+              value={formData.reason || ""}
               onChange={handleChange}
               required
               rows="4"
               placeholder="Enter reason for leave..."
-              className="
-                w-full
-                border border-gray-200
-                rounded-lg
-                px-4
-                py-3
-                text-sm
-                text-gray-700
-                placeholder:text-gray-400
-                outline-none
-                resize-none
-                focus:border-indigo-500
-                focus:ring-2
-                focus:ring-indigo-100
-                transition
-              "
+              className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-gray-700 placeholder:text-gray-400 outline-none resize-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition"
             />
           </div>
 
           {/* ================= BUTTONS ================= */}
           <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2.5 sm:gap-3 pt-1 sm:pt-2">
-
             <button
               type="button"
               onClick={() => setShowModal(false)}
-              className="
-                w-full
-                sm:w-auto
-                px-5
-                py-2.5
-                rounded-lg
-                border border-gray-200
-                text-sm
-                font-medium
-                text-gray-600
-                hover:bg-gray-50
-                transition
-              "
+              className="w-full sm:w-auto px-5 py-2.5 rounded-lg border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition"
             >
               Cancel
             </button>
 
             <button
               type="submit"
-              className="
-                w-full
-                sm:w-auto
-                px-5
-                py-2.5
-                rounded-lg
-                bg-indigo-600
-                hover:bg-indigo-700
-                text-white
-                text-sm
-                font-medium
-                transition
-              "
+              className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition"
             >
               Submit Request
             </button>
-
           </div>
-
         </form>
-
       </div>
-
     </div>
   );
 };

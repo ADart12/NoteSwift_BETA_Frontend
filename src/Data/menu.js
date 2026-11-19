@@ -8,19 +8,24 @@ import {
   Settings,
   User,
   Wallet,
-  ArrowDownUp,
-  PiggyBank,
   GraduationCap,
   ClipboardCheck,
   Trophy,
   UserRound,
   UserPlus,
   UserCheck,
+  FolderKanban,
+  CheckSquare,
+  Package,
+  Boxes,
+  TrendingUp,
+  Megaphone,
+  CreditCard,
 } from "lucide-react";
 
 export const menus = {
   // =========================
-  // ADMIN
+  // ADMIN & EXECUTIVE (CEO / SUPER_ADMIN)
   // =========================
   admin: [
     {
@@ -71,7 +76,7 @@ export const menus = {
   ],
 
   // =========================
-  // FINANCE MANAGER
+  // FINANCE MANAGER (CFO)
   // =========================
   financeManager: [
     {
@@ -80,24 +85,29 @@ export const menus = {
       path: "/dashboard",
     },
     {
-      icon: ArrowDownUp,
-      label: "Transactions",
-      path: "/finance/transactions",
+      icon: CalendarDays,
+      label: "Budgets",
+      path: "/finance/budget",
     },
     {
-      icon: PiggyBank,
-      label: "Budget",
-      path: "/finance/budget",
+      icon: CreditCard,
+      label: "Expenses",
+      path: "/finance/expenses",
+    },
+    {
+      icon: FileText,
+      label: "Invoices",
+      path: "/finance/invoices",
+    },
+    {
+      icon: Wallet,
+      label: "Payroll",
+      path: "/payroll",
     },
     {
       icon: BarChart3,
       label: "Reports",
       path: "/finance/reports",
-    },
-    {
-      icon: Users,
-      label: "Employees",
-      path: "/finance/employees",
     },
     {
       icon: Settings,
@@ -107,7 +117,7 @@ export const menus = {
   ],
 
   // =========================
-  // ACADEMIC MANAGER
+  // ACADEMIC MANAGER (CAO)
   // =========================
   academicManager: [
     {
@@ -121,11 +131,6 @@ export const menus = {
       path: "/academic",
     },
     {
-      icon: CalendarDays,
-      label: "Attendance",
-      path: "/academic/attendance",
-    },
-    {
       icon: Trophy,
       label: "Performance",
       path: "/academic/performance",
@@ -134,6 +139,16 @@ export const menus = {
       icon: UserRound,
       label: "Faculty",
       path: "/academic/faculty",
+    },
+    {
+      icon: CalendarDays,
+      label: "Attendance",
+      path: "/academic/attendance",
+    },
+    {
+      icon: CalendarDays,
+      label: "My Attendance",
+      path: "/my-attendance",
     },
     {
       icon: BarChart3,
@@ -148,7 +163,7 @@ export const menus = {
   ],
 
   // =========================
-  // HR MANAGER
+  // HR MANAGER (CHRO)
   // =========================
   hrManager: [
     {
@@ -170,6 +185,11 @@ export const menus = {
       icon: CalendarDays,
       label: "Attendance",
       path: "/hr/attendance",
+    },
+    {
+      icon: CalendarDays,
+      label: "My Attendance",
+      path: "/my-attendance",
     },
     {
       icon: FileText,
@@ -209,7 +229,151 @@ export const menus = {
   ],
 
   // =========================
-  // NORMAL EMPLOYEE
+  // TECHNOLOGY MANAGER (CTO)
+  // =========================
+  techManager: [
+    {
+      icon: LayoutDashboard,
+      label: "Dashboard",
+      path: "/dashboard",
+    },
+    {
+      icon: FolderKanban,
+      label: "Projects & Sprints",
+      path: "/engineering/projects",
+    },
+    {
+      icon: CheckSquare,
+      label: "Dev Tasks",
+      path: "/engineering/tasks",
+    },
+    {
+      icon: Users,
+      label: "Engineering Team",
+      path: "/employees",
+    },
+    {
+      icon: CalendarDays,
+      label: "Attendance",
+      path: "/attendance",
+    },
+    {
+      icon: CalendarDays,
+      label: "My Attendance",
+      path: "/my-attendance",
+    },
+    {
+      icon: Settings,
+      label: "Settings",
+      path: "/settings",
+    },
+  ],
+
+  // =========================
+  // OPERATIONS MANAGER (COO)
+  // =========================
+  opsManager: [
+    {
+      icon: LayoutDashboard,
+      label: "Dashboard",
+      path: "/dashboard",
+    },
+    {
+      icon: Boxes,
+      label: "Asset Inventory",
+      path: "/operations/assets",
+    },
+    {
+      icon: Package,
+      label: "Vendors & Suppliers",
+      path: "/operations/vendors",
+    },
+    {
+      icon: CalendarDays,
+      label: "Attendance",
+      path: "/attendance",
+    },
+    {
+      icon: CalendarDays,
+      label: "My Attendance",
+      path: "/my-attendance",
+    },
+    {
+      icon: Settings,
+      label: "Settings",
+      path: "/settings",
+    },
+  ],
+
+  // =========================
+  // SALES MANAGER (CCO)
+  // =========================
+  salesManager: [
+    {
+      icon: LayoutDashboard,
+      label: "Dashboard",
+      path: "/dashboard",
+    },
+    {
+      icon: Users,
+      label: "Clients & Accounts",
+      path: "/commercial/clients",
+    },
+    {
+      icon: TrendingUp,
+      label: "Deals & Pipeline",
+      path: "/commercial/deals",
+    },
+    {
+      icon: FileText,
+      label: "Sales Orders",
+      path: "/commercial/orders",
+    },
+    {
+      icon: CalendarDays,
+      label: "My Attendance",
+      path: "/my-attendance",
+    },
+    {
+      icon: Settings,
+      label: "Settings",
+      path: "/settings",
+    },
+  ],
+
+  // =========================
+  // MARKETING MANAGER (CMO)
+  // =========================
+  marketingManager: [
+    {
+      icon: LayoutDashboard,
+      label: "Dashboard",
+      path: "/dashboard",
+    },
+    {
+      icon: Megaphone,
+      label: "Campaigns",
+      path: "/marketing/campaigns",
+    },
+    {
+      icon: Users,
+      label: "Inbound Leads",
+      path: "/marketing/leads",
+    },
+    {
+      icon: CalendarDays,
+      label: "My Attendance",
+      path: "/my-attendance",
+    },
+    {
+      icon: Settings,
+      label: "Settings",
+      path: "/settings",
+    },
+  ],
+
+  // =========================
+  // NORMAL EMPLOYEE / STAFF
   // =========================
   employee: [
     {
@@ -240,9 +404,8 @@ export const menus = {
   ],
 };
 
-
 // =====================================================
-// GET MENU BASED ON USER
+// GET MENU BASED ON USER ROLE & DEPARTMENT
 // =====================================================
 
 export const getMenu = (user) => {
@@ -250,40 +413,70 @@ export const getMenu = (user) => {
     return [];
   }
 
+  const role = (user.role || "").toLowerCase();
+
   // =========================
-  // ADMIN
+  // SUPER ADMIN, CEO & GLOBAL ADMIN
   // =========================
-  if (user.role === "admin") {
+  if (role === "admin" || role === "super_admin" || role === "ceo") {
     return menus.admin;
   }
 
   // =========================
-  // MANAGER
+  // MANAGERS & C-LEVEL OFFICERS
   // =========================
-  if (user.role === "manager") {
-    const departmentName =
-      user.department?.name?.trim().toLowerCase();
+  if (role === "manager" || role === "c_level") {
+    const departmentName = (user.department?.name || "").trim().toLowerCase();
+    const departmentCode = (user.department?.code || "").trim().toLowerCase();
 
-    if (departmentName === "finance") {
+    if (departmentName === "finance" || departmentCode === "fin") {
       return menus.financeManager;
     }
 
-    if (departmentName === "academic") {
+    if (
+      departmentName === "academics" ||
+      departmentName === "academic" ||
+      departmentCode === "acad" ||
+      departmentCode === "ada"
+    ) {
       return menus.academicManager;
     }
 
     if (
       departmentName === "human resources" ||
-      departmentName === "hr"
+      departmentName === "hr" ||
+      departmentCode === "hr"
     ) {
       return menus.hrManager;
     }
 
-    return [];
+    if (
+      departmentName === "technology" ||
+      departmentName === "software development" ||
+      departmentCode === "tech" ||
+      departmentCode === "sd"
+    ) {
+      return menus.techManager;
+    }
+
+    if (departmentName === "operations" || departmentCode === "ops") {
+      return menus.opsManager;
+    }
+
+    if (departmentName === "sales" || departmentCode === "sal") {
+      return menus.salesManager;
+    }
+
+    if (departmentName === "marketing" || departmentCode === "mkt") {
+      return menus.marketingManager;
+    }
+
+    // Default fallback for any unlisted managerial department
+    return menus.admin;
   }
 
   // =========================
-  // EMPLOYEE
+  // NORMAL EMPLOYEE / INDIVIDUAL CONTRIBUTOR
   // =========================
   return menus.employee;
 };

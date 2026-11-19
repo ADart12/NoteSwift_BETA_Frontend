@@ -1,4 +1,3 @@
-import React from "react";
 import {
   CalendarDays,
   Clock3,
@@ -6,24 +5,25 @@ import {
   XCircle,
 } from "lucide-react";
 
-const LeaveRequestStats = ({ leaveRequests }) => {
-  
-  const pending = leaveRequests.filter(
+const LeaveRequestStats = ({ leaveRequests = [] }) => {
+  const requests = Array.isArray(leaveRequests) ? leaveRequests : [];
+
+  const pending = requests.filter(
     (request) => request.status === "Pending"
   ).length;
 
-  const approved = leaveRequests.filter(
+  const approved = requests.filter(
     (request) => request.status === "Approved"
   ).length;
 
-  const rejected = leaveRequests.filter(
+  const rejected = requests.filter(
     (request) => request.status === "Rejected"
   ).length;
 
   const stats = [
     {
-      title: "Total Leaves",
-      value: "12",
+      title: "Total Requests",
+      value: requests.length,
       icon: CalendarDays,
       iconBg: "bg-indigo-50",
       iconColor: "text-indigo-600",

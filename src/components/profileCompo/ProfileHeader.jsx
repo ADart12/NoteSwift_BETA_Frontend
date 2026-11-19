@@ -1,7 +1,20 @@
-import React from "react";
 import { Camera, Edit } from "lucide-react";
 
-const ProfileHeader = ({ profile, onEdit }) => {
+const ProfileHeader = ({ profile = {}, onEdit }) => {
+  const initials = profile?.fullName
+    ? profile.fullName
+        .split(" ")
+        .filter(Boolean)
+        .map((name) => name.charAt(0).toUpperCase())
+        .join("")
+        .slice(0, 2)
+    : "U";
+
+  const departmentName =
+    typeof profile?.department === "object"
+      ? profile?.department?.name
+      : profile?.department || "";
+
   return (
     <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 sm:p-5 md:p-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
@@ -10,12 +23,7 @@ const ProfileHeader = ({ profile, onEdit }) => {
           <div className="relative shrink-0">
             <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-indigo-100 flex items-center justify-center overflow-hidden">
               <span className="text-xl sm:text-2xl font-semibold text-indigo-600">
-                {
-                  profile.fullName
-                    .split(" ")
-                    .map(name => name. toUpperCase().charAt(0))
-                    .join("")
-                }
+                {initials}
               </span>
             </div>
 
@@ -30,16 +38,18 @@ const ProfileHeader = ({ profile, onEdit }) => {
 
           <div className="min-w-0">
             <h1 className="text-lg sm:text-xl font-semibold text-gray-800 truncate">
-              {profile.fullName}
+              {profile?.fullName || "Employee Profile"}
             </h1>
 
             <p className="text-sm text-gray-500 mt-1 truncate">
-              {profile.designation}
+              {profile?.designation || "Designation"}
             </p>
 
-            <p className="text-xs sm:text-sm text-gray-400 mt-1 truncate">
-              {profile.department.name}
-            </p>
+            {departmentName && (
+              <p className="text-xs sm:text-sm text-gray-400 mt-1 truncate">
+                {departmentName}
+              </p>
+            )}
           </div>
         </div>
 

@@ -10,7 +10,6 @@ const LeaveFilters = ({
   setCurrentPage,
   
   departments,
-  setDepartments
 }) => {
   const handleReset = () => {
     setSearch("");

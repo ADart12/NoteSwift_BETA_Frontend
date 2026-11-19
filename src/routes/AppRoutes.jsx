@@ -42,10 +42,21 @@ import LeaveRequest from "../pages/leave/LeaveRequest";
 import Payroll from "../pages/payroll/Payroll";
 
 // =========================
+// DEPARTMENTS
+// =========================
+import Departments from "../pages/department/Departments";
+
+// =========================
 // SETTINGS
 // =========================
 import Settings from "../pages/settings/Settings";
 
+// =========================
+// FINANCE
+// =========================
+import BudgetPage from "../pages/finance/BudgetPage";
+import ExpensesPage from "../pages/finance/ExpensesPage";
+import InvoicesPage from "../pages/finance/InvoicesPage";
 
 // =====================================================
 // PROTECTED ROUTE
@@ -69,9 +80,8 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
-
 // =====================================================
-// ROLE ROUTE
+// ROLE ROUTE (Hierarchical RBAC)
 // =====================================================
 
 const RoleRoute = ({ allowedRoles, children }) => {
@@ -81,16 +91,28 @@ const RoleRoute = ({ allowedRoles, children }) => {
     return <Navigate to="/login" replace />;
   }
 
-  if (!allowedRoles.includes(user.role)) {
-    return <Navigate to="/dashboard" replace />;
+  const role = (user.role || "").toLowerCase();
+  const normalizedAllowed = allowedRoles.map((r) => r.toLowerCase());
+
+  // Super Admin, CEO, Admin possess universal managerial and staff access
+  if (role === "admin" || role === "super_admin" || role === "ceo") {
+    return children;
   }
 
-  return children;
+  if (normalizedAllowed.includes(role)) {
+    return children;
+  }
+
+  // C-Level officers possess manager-level access
+  if (role === "c_level" && normalizedAllowed.includes("manager")) {
+    return children;
+  }
+
+  return <Navigate to="/dashboard" replace />;
 };
 
-
 // =====================================================
-// DEPARTMENT ROUTE
+// DEPARTMENT ROUTE (Hierarchical & Aliased ABAC)
 // =====================================================
 
 const DepartmentRoute = ({ department, children }) => {
@@ -100,21 +122,37 @@ const DepartmentRoute = ({ department, children }) => {
     return <Navigate to="/login" replace />;
   }
 
-  // Only managers
-  if (user.role !== "manager") {
+  const role = (user.role || "").toLowerCase();
+
+  // Super Admin, CEO, Admin have access to all department views
+  if (role === "admin" || role === "super_admin" || role === "ceo") {
+    return children;
+  }
+
+  if (role !== "manager" && role !== "c_level") {
     return <Navigate to="/dashboard" replace />;
   }
 
-  const departmentName =
-    user.department?.name?.trim().toLowerCase();
+  const departmentName = user.department?.name?.trim().toLowerCase();
+  const departmentCode = user.department?.code?.trim().toLowerCase();
+  const target = department.toLowerCase();
 
-  if (departmentName !== department.toLowerCase()) {
-    return <Navigate to="/dashboard" replace />;
+  if (
+    departmentName === target ||
+    departmentCode === target ||
+    (target === "human resources" && (departmentCode === "hr" || departmentName === "hr")) ||
+    (target === "finance" && (departmentCode === "fin" || departmentName === "finance")) ||
+    (target === "academic" && (departmentCode === "acad" || departmentCode === "ada" || departmentName === "academics")) ||
+    (target === "technology" && (departmentCode === "tech" || departmentCode === "sd" || departmentName === "technology")) ||
+    (target === "operations" && (departmentCode === "ops" || departmentName === "operations")) ||
+    (target === "sales" && (departmentCode === "sal" || departmentName === "sales")) ||
+    (target === "marketing" && (departmentCode === "mkt" || departmentName === "marketing"))
+  ) {
+    return children;
   }
 
-  return children;
+  return <Navigate to="/dashboard" replace />;
 };
-
 
 // =====================================================
 // APP ROUTES
@@ -133,7 +171,6 @@ const AppRoutes = () => {
 
   return (
     <Routes>
-
       {/* =================================================
           PUBLIC ROUTES
       ================================================= */}
@@ -165,7 +202,6 @@ const AppRoutes = () => {
         element={<RegisterInvitation />}
       />
 
-
       {/* =================================================
           PROTECTED ROUTES
       ================================================= */}
@@ -177,7 +213,6 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       >
-
         {/* =========================
             COMMON DASHBOARD
         ========================= */}
@@ -187,15 +222,14 @@ const AppRoutes = () => {
           element={<Dashboard />}
         />
 
-
         {/* =========================
-            ADMIN
+            ADMIN ROUTES
         ========================= */}
 
         <Route
           path="/employees"
           element={
-            <RoleRoute allowedRoles={["admin"]}>
+            <RoleRoute allowedRoles={["admin", "manager"]}>
               <Employees />
             </RoleRoute>
           }
@@ -204,7 +238,7 @@ const AppRoutes = () => {
         <Route
           path="/invite-employee"
           element={
-            <RoleRoute allowedRoles={["admin"]}>
+            <RoleRoute allowedRoles={["admin", "manager"]}>
               <InviteEmployee />
             </RoleRoute>
           }
@@ -213,7 +247,7 @@ const AppRoutes = () => {
         <Route
           path="/attendance"
           element={
-            <RoleRoute allowedRoles={["admin"]}>
+            <RoleRoute allowedRoles={["admin", "manager"]}>
               <Attendance />
             </RoleRoute>
           }
@@ -222,7 +256,7 @@ const AppRoutes = () => {
         <Route
           path="/leaves"
           element={
-            <RoleRoute allowedRoles={["admin"]}>
+            <RoleRoute allowedRoles={["admin", "manager"]}>
               <Leaves />
             </RoleRoute>
           }
@@ -231,8 +265,17 @@ const AppRoutes = () => {
         <Route
           path="/payroll"
           element={
-            <RoleRoute allowedRoles={["admin"]}>
+            <RoleRoute allowedRoles={["admin", "manager"]}>
               <Payroll />
+            </RoleRoute>
+          }
+        />
+
+        <Route
+          path="/departments"
+          element={
+            <RoleRoute allowedRoles={["admin", "manager"]}>
+              <Departments />
             </RoleRoute>
           }
         />
@@ -242,7 +285,6 @@ const AppRoutes = () => {
           element={<Settings />}
         />
 
-
         {/* =========================
             NORMAL EMPLOYEE
         ========================= */}
@@ -250,7 +292,7 @@ const AppRoutes = () => {
         <Route
           path="/my-attendance"
           element={
-            <RoleRoute allowedRoles={["employee"]}>
+            <RoleRoute allowedRoles={["employee", "manager", "admin"]}>
               <MyAttendance />
             </RoleRoute>
           }
@@ -259,7 +301,7 @@ const AppRoutes = () => {
         <Route
           path="/leave-request"
           element={
-            <RoleRoute allowedRoles={["employee"]}>
+            <RoleRoute allowedRoles={["employee", "manager", "admin"]}>
               <LeaveRequest />
             </RoleRoute>
           }
@@ -269,7 +311,6 @@ const AppRoutes = () => {
           path="/profile"
           element={<Profile />}
         />
-
 
         {/* =================================================
             HR MANAGER
@@ -320,10 +361,27 @@ const AppRoutes = () => {
           }
         />
 
+        <Route
+          path="/hr/departments"
+          element={
+            <DepartmentRoute department="Human Resources">
+              <Departments />
+            </DepartmentRoute>
+          }
+        />
 
         {/* =================================================
             FINANCE MANAGER
         ================================================= */}
+
+        <Route
+          path="/finance/attendance"
+          element={
+            <DepartmentRoute department="Finance">
+              <Attendance />
+            </DepartmentRoute>
+          }
+        />
 
         <Route
           path="/finance/employees"
@@ -338,9 +396,7 @@ const AppRoutes = () => {
           path="/finance/transactions"
           element={
             <DepartmentRoute department="Finance">
-              <div className="p-6">
-                Finance Transactions
-              </div>
+              <div className="p-6">Finance Transactions</div>
             </DepartmentRoute>
           }
         />
@@ -349,9 +405,25 @@ const AppRoutes = () => {
           path="/finance/budget"
           element={
             <DepartmentRoute department="Finance">
-              <div className="p-6">
-                Finance Budget
-              </div>
+              <BudgetPage />
+            </DepartmentRoute>
+          }
+        />
+
+        <Route
+          path="/finance/expenses"
+          element={
+            <DepartmentRoute department="Finance">
+              <ExpensesPage />
+            </DepartmentRoute>
+          }
+        />
+
+        <Route
+          path="/finance/invoices"
+          element={
+            <DepartmentRoute department="Finance">
+              <InvoicesPage />
             </DepartmentRoute>
           }
         />
@@ -360,13 +432,10 @@ const AppRoutes = () => {
           path="/finance/reports"
           element={
             <DepartmentRoute department="Finance">
-              <div className="p-6">
-                Finance Reports
-              </div>
+              <div className="p-6">Finance Reports</div>
             </DepartmentRoute>
           }
         />
-
 
         {/* =================================================
             ACADEMIC MANAGER
@@ -376,9 +445,7 @@ const AppRoutes = () => {
           path="/academic"
           element={
             <DepartmentRoute department="Academic">
-              <div className="p-6">
-                Academic Management
-              </div>
+              <div className="p-6">Academic Management</div>
             </DepartmentRoute>
           }
         />
@@ -396,9 +463,7 @@ const AppRoutes = () => {
           path="/academic/performance"
           element={
             <DepartmentRoute department="Academic">
-              <div className="p-6">
-                Academic Performance
-              </div>
+              <div className="p-6">Academic Performance</div>
             </DepartmentRoute>
           }
         />
@@ -416,15 +481,11 @@ const AppRoutes = () => {
           path="/academic/reports"
           element={
             <DepartmentRoute department="Academic">
-              <div className="p-6">
-                Academic Reports
-              </div>
+              <div className="p-6">Academic Reports</div>
             </DepartmentRoute>
           }
         />
-
       </Route>
-
 
       {/* =================================================
           FALLBACK
@@ -440,7 +501,6 @@ const AppRoutes = () => {
           )
         }
       />
-
     </Routes>
   );
 };

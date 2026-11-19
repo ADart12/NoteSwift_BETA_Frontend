@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { getDepartments } from "../../services/invitationServices";
+
 const AttendanceFilters = ({
   search,
   setSearch,
@@ -5,14 +8,26 @@ const AttendanceFilters = ({
   setDepartment,
   setCurrentPage,
 }) => {
+  const [departments, setDepartments] = useState([]);
+
+  useEffect(() => {
+    const fetchDept = async () => {
+      try {
+        const data = await getDepartments();
+        setDepartments(data.departments || []);
+      } catch (err) {
+        console.error("Failed to load departments in AttendanceFilters:", err);
+      }
+    };
+    fetchDept();
+  }, []);
+
   return (
     <div className="bg-white rounded-2xl shadow-sm border p-6 mb-6">
-
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-
         <input
           type="text"
-          placeholder="🔍 Search employee..."
+          placeholder="🔍 Search employee by name, email or ID..."
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
@@ -30,11 +45,11 @@ const AttendanceFilters = ({
           className="border rounded-xl px-4 py-3"
         >
           <option value="">All Departments</option>
-          <option>IT</option>
-          <option>HR</option>
-          <option>Marketing</option>
-          <option>Finance</option>
-          <option>Sales</option>
+          {departments.map((dept) => (
+            <option key={dept._id} value={dept._id}>
+              {dept.name} ({dept.code})
+            </option>
+          ))}
         </select>
 
         <button
@@ -47,9 +62,7 @@ const AttendanceFilters = ({
         >
           Reset Filters
         </button>
-
       </div>
-
     </div>
   );
 };

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Briefcase,
   Building2,
@@ -6,7 +5,12 @@ import {
   CalendarDays,
 } from "lucide-react";
 
-const ProfessionalInfo = ({ profile, isEditing, onChange }) => {
+const ProfessionalInfo = ({ profile = {} }) => {
+  const departmentName =
+    typeof profile?.department === "object"
+      ? profile?.department?.name
+      : profile?.department || "General";
+
   return (
     <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 sm:p-5 md:p-6">
       <div className="mb-5 sm:mb-6">
@@ -35,10 +39,9 @@ const ProfessionalInfo = ({ profile, isEditing, onChange }) => {
             <input
               type="text"
               name="employeeId"
-              value={profile.employeeId}
-              onChange={onChange}
-              disabled={!isEditing}
-              className="w-full min-w-0 pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none focus:border-indigo-500 disabled:bg-gray-50 disabled:text-gray-500"
+              value={profile?.employeeId || ""}
+              disabled
+              className="w-full min-w-0 pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none bg-gray-50 text-gray-500 cursor-not-allowed"
             />
           </div>
         </div>
@@ -58,10 +61,9 @@ const ProfessionalInfo = ({ profile, isEditing, onChange }) => {
             <input
               type="text"
               name="designation"
-              value={profile.designation}
-              onChange={onChange}
-              disabled={!isEditing}
-              className="w-full min-w-0 pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none focus:border-indigo-500 disabled:bg-gray-50 disabled:text-gray-500"
+              value={profile?.designation || ""}
+              disabled
+              className="w-full min-w-0 pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none bg-gray-50 text-gray-500 cursor-not-allowed"
             />
           </div>
         </div>
@@ -81,10 +83,9 @@ const ProfessionalInfo = ({ profile, isEditing, onChange }) => {
             <input
               type="text"
               name="department"
-              value={profile.department.name}
-              onChange={onChange}
-              disabled={!isEditing}
-              className="w-full min-w-0 pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none focus:border-indigo-500 disabled:bg-gray-50 disabled:text-gray-500"
+              value={departmentName}
+              disabled
+              className="w-full min-w-0 pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none bg-gray-50 text-gray-500 cursor-not-allowed"
             />
           </div>
         </div>
@@ -104,10 +105,9 @@ const ProfessionalInfo = ({ profile, isEditing, onChange }) => {
             <input
               type="date"
               name="joiningDate"
-              value={profile?.joiningDate?.split("T")[0] || ""}
-              onChange={onChange}
-              disabled={!isEditing}
-              className="w-full min-w-0 pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none focus:border-indigo-500 disabled:bg-gray-50 disabled:text-gray-500"
+              value={profile?.joiningDate ? String(profile.joiningDate).split("T")[0] : ""}
+              disabled
+              className="w-full min-w-0 pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none bg-gray-50 text-gray-500 cursor-not-allowed"
             />
           </div>
         </div>

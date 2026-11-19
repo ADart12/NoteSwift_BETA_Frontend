@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import PayrollHeader from "../../components/payrollCompo/PayrollHeader";
 import PayrollStats from "../../components/payrollCompo/PayrollStats";

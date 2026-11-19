@@ -1,7 +1,6 @@
-import React from "react";
 import { User, Mail, Phone, Calendar } from "lucide-react";
 
-const PersonalInfo = ({ profile, isEditing, onChange }) => {
+const PersonalInfo = ({ profile = {}, isEditing, onChange }) => {
   return (
     <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 sm:p-5 md:p-6">
       <div className="mb-5 sm:mb-6">
@@ -54,9 +53,8 @@ const PersonalInfo = ({ profile, isEditing, onChange }) => {
               type="email"
               name="email"
               value={profile?.email || ""}
-              onChange={onChange}
-              disabled={!isEditing}
-              className="w-full min-w-0 pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none focus:border-indigo-500 disabled:bg-gray-50 disabled:text-gray-500"
+              disabled
+              className="w-full min-w-0 pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none bg-gray-50 text-gray-500 cursor-not-allowed"
             />
           </div>
         </div>
@@ -99,7 +97,7 @@ const PersonalInfo = ({ profile, isEditing, onChange }) => {
             <input
               type="date"
               name="dateOfBirth"
-              value={profile?.dateOfBirth || ""}
+              value={profile?.dateOfBirth ? String(profile.dateOfBirth).split("T")[0] : ""}
               onChange={onChange}
               disabled={!isEditing}
               className="w-full min-w-0 pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-700 outline-none focus:border-indigo-500 disabled:bg-gray-50 disabled:text-gray-500"

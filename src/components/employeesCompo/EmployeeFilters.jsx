@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { getDepartments } from "../../services/invitationServices";
+
 const EmployeeFilters = ({
   search,
   setSearch,
@@ -5,15 +8,27 @@ const EmployeeFilters = ({
   setRole,
   department,
   setDepartment,
-  designation,
-  setDesignation,
+  status,
+  setStatus,
   setCurrentPage,
 }) => {
+  const [departments, setDepartments] = useState([]);
+
+  useEffect(() => {
+    const fetchDept = async () => {
+      try {
+        const data = await getDepartments();
+        setDepartments(data.departments || []);
+      } catch (err) {
+        console.error("Failed to fetch departments for filter:", err);
+      }
+    };
+    fetchDept();
+  }, []);
+
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 md:p-6 mb-6">
-
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-
         <input
           type="text"
           placeholder="Search by ID, Name or Email"
@@ -26,21 +41,24 @@ const EmployeeFilters = ({
         />
 
         <select
-          value={role}
+          value={role || ""}
           onChange={(e) => {
-            setRole(e.target.value);
+            if (setRole) setRole(e.target.value);
             setCurrentPage(1);
           }}
           className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">All Roles</option>
-          <option value="Admin">Admin</option>
-          <option value="Employee">Employee</option>
-          <option value="HR">HR</option>
+          <option value="admin">Admin</option>
+          <option value="ceo">CEO / Executive</option>
+          <option value="c_level">C-Level Officer</option>
+          <option value="manager">Manager</option>
+          <option value="staff">Staff / Lead</option>
+          <option value="employee">Employee</option>
         </select>
 
         <select
-          value={department}
+          value={department || ""}
           onChange={(e) => {
             setDepartment(e.target.value);
             setCurrentPage(1);
@@ -48,43 +66,41 @@ const EmployeeFilters = ({
           className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">All Departments</option>
-          <option value="IT">IT</option>
-          <option value="HR">HR</option>
-          <option value="Administration">Administration</option>
+          {departments.map((dept) => (
+            <option key={dept._id} value={dept._id}>
+              {dept.name} ({dept.code})
+            </option>
+          ))}
         </select>
 
         <select
-          value={designation}
+          value={status || ""}
           onChange={(e) => {
-            setDesignation(e.target.value);
+            if (setStatus) setStatus(e.target.value);
             setCurrentPage(1);
           }}
           className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          <option value="">All Designations</option>
-          <option value="Frontend Developer">Frontend Developer</option>
-          <option value="Backend Developer">Backend Developer</option>
-          <option value="HR Manager">HR Manager</option>
-          <option value="System Admin">System Admin</option>
+          <option value="">All Statuses</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
         </select>
-
       </div>
 
-      <div className="flex justify-center sm:justify-end mt-5">
+      <div className="flex justify-center sm:justify-end mt-4">
         <button
           onClick={() => {
             setSearch("");
-            setRole("");
+            if (setRole) setRole("");
             setDepartment("");
-            setDesignation("");
+            if (setStatus) setStatus("");
             setCurrentPage(1);
           }}
-          className="w-full sm:w-auto bg-gray-200 hover:bg-gray-300 px-5 py-2 rounded-lg transition"
+          className="w-full sm:w-auto bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-2.5 rounded-lg font-medium transition text-sm"
         >
           Reset Filters
         </button>
       </div>
-
     </div>
   );
 };

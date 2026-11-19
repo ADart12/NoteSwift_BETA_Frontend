@@ -1,97 +1,95 @@
-const employees = [
-  {
-    _id: 1,
-    employeeId: "EMP001",
-    fullName: "Aarav Sharma",
-    designation: "Frontend Developer",
-    department: "IT",
-    joinedDate: "28 Jul 2026",
-  },
-  {
-    _id: 2,
-    employeeId: "EMP002",
-    fullName: "Priya Verma",
-    designation: "UI/UX Designer",
-    department: "Design",
-    joinedDate: "27 Jul 2026",
-  },
-  {
-    _id: 3,
-    employeeId: "EMP003",
-    fullName: "Rahul Singh",
-    designation: "Backend Developer",
-    department: "IT",
-    joinedDate: "25 Jul 2026",
-  },
-];
-
-const getStatusColor = (status) => {
-  if (status === "Present")
-    return "bg-green-100 text-green-700";
-
-  if (status === "Absent")
-    return "bg-red-100 text-red-700";
-
-  return "bg-orange-100 text-orange-700";
-};
+import { useEffect, useState } from "react";
+import { getEmployees } from "../../services/employeeServies";
+import { useNavigate } from "react-router-dom";
 
 const RecentEmployees = () => {
+  const [employees, setEmployees] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchRecent = async () => {
+      try {
+        setLoading(true);
+        const data = await getEmployees({ limit: 4 });
+        setEmployees(data?.employees || []);
+      } catch (err) {
+        console.error("Failed to load recent employees:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRecent();
+  }, []);
+
   return (
-    <div className="space-y-5">
-      {employees.map((emp) => (
-        <div
-          key={emp._id}
-          className="
-        flex items-center gap-4
-        bg-white
-        p-5
-        rounded-2xl
-        border border-gray-200
-        shadow-sm
-        hover:shadow-lg
-        hover:-translate-y-1
-        hover:border-blue-300
-        transition-all
-        duration-300
-        cursor-pointer
-      "
-        >
-          {/* Avatar */}
-          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 text-white flex items-center justify-center text-xl font-bold shadow-md shrink-0">
-            {emp.fullName.charAt(0)}
-          </div>
-
-          {/* Employee Info */}
-          <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-900">
-              {emp.fullName}
-            </h3>
-
-            <p className="text-sm text-gray-600 mt-1">
-              <span className="font-medium text-gray-700">
-                {emp.employeeId}
-              </span>
-              <span className="mx-2 text-gray-300">•</span>
-              {emp.designation}
-            </p>
-
-            <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
-              <span className="px-2 py-1 rounded-full bg-blue-50 text-blue-700 font-medium">
-                {emp.department}
-              </span>
-
-              <span>•</span>
-
-              <span>Joined {emp.joinedDate}</span>
-            </div>
-          </div>
-
-          {/* New Badge */}
-          <span className="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">
-            New
-          </span>
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 space-y-4">
+      <div className="flex justify-between items-center mb-2">
+        <div>
+          <h2 className="text-xl font-bold text-gray-800">Recent Employees</h2>
+          <p className="text-sm text-gray-500">Newly added team members</p>
         </div>
-      ))}
+
+        <button
+          onClick={() => navigate("/employees")}
+          className="text-blue-600 hover:text-blue-700 text-sm font-semibold transition"
+        >
+          View All →
+        </button>
+      </div>
+
+      {loading ? (
+        <p className="text-sm text-gray-400 py-6 text-center">Loading team members...</p>
+      ) : employees.length === 0 ? (
+        <p className="text-sm text-gray-400 py-6 text-center">No employees found.</p>
+      ) : (
+        employees.map((emp) => {
+          const departmentName =
+            typeof emp.department === "object"
+              ? emp.department?.name
+              : emp.department || "General";
+
+          const joinedDate = emp.joiningDate
+            ? new Date(emp.joiningDate).toLocaleDateString("en-US", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              })
+            : "Recently";
+
+          return (
+            <div
+              key={emp._id}
+              className="flex items-center gap-4 bg-white p-4 rounded-xl border border-gray-100 shadow-xs hover:shadow-md hover:border-blue-200 transition-all cursor-pointer"
+            >
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 text-white flex items-center justify-center text-lg font-bold shadow-xs shrink-0">
+                {emp.fullName?.charAt(0) || "?"}
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <h3 className="text-base font-semibold text-gray-900 truncate">
+                  {emp.fullName}
+                </h3>
+
+                <p className="text-xs text-gray-500 mt-0.5 truncate">
+                  <span className="font-mono text-gray-700">{emp.employeeId}</span>
+                  <span className="mx-1.5">•</span>
+                  <span>{emp.designation || "Staff"}</span>
+                </p>
+
+                <div className="flex items-center gap-2 mt-1.5 text-xs text-gray-400">
+                  <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-medium">
+                    {departmentName}
+                  </span>
+                  <span>•</span>
+                  <span>Joined {joinedDate}</span>
+                </div>
+              </div>
+            </div>
+          );
+        })
+      )}
     </div>
   );
 };

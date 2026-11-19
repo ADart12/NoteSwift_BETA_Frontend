@@ -1,5 +1,3 @@
-import React from "react";
-
 const LeaveRequestRow = ({ request }) => {
   const getStatusStyle = (status) => {
     switch (status) {
@@ -15,6 +13,7 @@ const LeaveRequestRow = ({ request }) => {
   };
 
   const formatDate = (date) => {
+    if (!date) return "--";
     return new Date(date).toLocaleDateString("en-GB", {
       day: "2-digit",
       month: "short",
@@ -23,7 +22,7 @@ const LeaveRequestRow = ({ request }) => {
   };
 
   return (
-    <tr className="hover:bg-gray-50 transition">
+    <tr className="hover:bg-gray-50 transition border-b">
       <td className="px-6 py-4 text-sm font-medium text-gray-800">
         {request.leaveType}
       </td>
@@ -36,7 +35,7 @@ const LeaveRequestRow = ({ request }) => {
         {formatDate(request.toDate)}
       </td>
 
-      <td className="px-6 py-4 text-sm text-gray-600">
+      <td className="px-6 py-4 text-sm text-gray-600 font-mono">
         {request.days}
       </td>
 
@@ -48,7 +47,7 @@ const LeaveRequestRow = ({ request }) => {
 
       <td className="px-6 py-4">
         <span
-          className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${getStatusStyle(
+          className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold ${getStatusStyle(
             request.status
           )}`}
         >

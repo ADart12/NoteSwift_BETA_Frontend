@@ -1,7 +1,10 @@
-import React from "react";
+import { useState } from "react";
 import AttendanceRow from "./AttendenceRow";
+import { X } from "lucide-react";
 
-const AttendanceTable = ({ attendance }) => {
+const AttendanceTable = ({ attendance = [] }) => {
+  const [previewPhoto, setPreviewPhoto] = useState(null);
+
   const getStatusStyle = (status) => {
     if (status === "Present") {
       return "bg-green-50 text-green-600";
@@ -29,7 +32,7 @@ const AttendanceTable = ({ attendance }) => {
             </h2>
 
             <p className="text-sm text-gray-500 mt-1">
-              Your daily attendance records
+              Your daily attendance records with webcam photos and geo-location tags
             </p>
           </div>
 
@@ -72,6 +75,7 @@ const AttendanceTable = ({ attendance }) => {
                   key={record._id}
                   record={record}
                   getStatusStyle={getStatusStyle}
+                  onPhotoClick={(photoUrl, title) => setPreviewPhoto({ photoUrl, title })}
                 />
               ))
             ) : (
@@ -90,6 +94,30 @@ const AttendanceTable = ({ attendance }) => {
           </tbody>
         </table>
       </div>
+
+      {/* Snapshot Preview Modal */}
+      {previewPhoto && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white rounded-2xl overflow-hidden shadow-2xl max-w-md w-full">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h4 className="font-bold text-gray-800 text-sm">{previewPhoto.title}</h4>
+              <button
+                onClick={() => setPreviewPhoto(null)}
+                className="p-1 text-gray-400 hover:text-gray-600 rounded-lg"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <div className="p-4 bg-slate-900">
+              <img
+                src={previewPhoto.photoUrl}
+                alt="Webcam snapshot"
+                className="w-full h-auto rounded-xl object-contain max-h-[70vh]"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,4 +1,3 @@
-import React from "react";
 import { CalendarDays, RotateCcw } from "lucide-react";
 
 const AttendanceFilters = ({
@@ -11,7 +10,6 @@ const AttendanceFilters = ({
   return (
     <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
       <div className="flex flex-col xl:flex-row gap-4">
-
         {/* Month */}
         <div className="relative xl:w-64">
           <CalendarDays
@@ -48,7 +46,6 @@ const AttendanceFilters = ({
           <RotateCcw size={16} />
           Reset
         </button>
-
       </div>
     </div>
   );

@@ -1,7 +1,6 @@
-import React from "react";
 import { MapPin, Home, Globe } from "lucide-react";
 
-const ProfileInfo = ({ profile, isEditing, onChange }) => {
+const ProfileInfo = ({ profile = {}, isEditing, onChange }) => {
   return (
     <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 sm:p-5 md:p-6">
       <div className="mb-5 sm:mb-6">
@@ -29,7 +28,7 @@ const ProfileInfo = ({ profile, isEditing, onChange }) => {
 
             <textarea
               name="address"
-              value={profile.address}
+              value={profile?.address || ""}
               onChange={onChange}
               disabled={!isEditing}
               rows={3}
@@ -54,7 +53,7 @@ const ProfileInfo = ({ profile, isEditing, onChange }) => {
             <input
               type="text"
               name="city"
-              value={profile.city}
+              value={profile?.city || ""}
               onChange={onChange}
               disabled={!isEditing}
               placeholder="Enter city"
@@ -78,7 +77,7 @@ const ProfileInfo = ({ profile, isEditing, onChange }) => {
             <input
               type="text"
               name="country"
-              value={profile.country}
+              value={profile?.country || ""}
               onChange={onChange}
               disabled={!isEditing}
               placeholder="Enter country"
