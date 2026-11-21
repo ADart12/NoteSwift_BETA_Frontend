@@ -6,9 +6,12 @@ import EmployeeFilters from "../../components/employeesCompo/EmployeeFilters";
 import EmployeeTable from "../../components/employeesCompo/EmployeeTable";
 import EmployeeCard from "../../components/employeesCompo/EmployeeCard";
 import { getEmployees } from "../../services/employeeServies";
+import { getDepartments } from "../../services/invitationServices";
 import { LayoutGrid, List } from "lucide-react";
 
-const Employee = () => {
+// departmentFilter: optional string like "Technology", "Academic", "Human Resources", "Finance"
+// When provided, employees are locked to that department and the dept dropdown is hidden.
+const Employee = ({ departmentFilter }) => {
   const navigate = useNavigate();
   const [employees, setEmployees] = useState([]);
   const [totalEmployees, setTotalEmployees] = useState(0);
@@ -20,6 +23,39 @@ const Employee = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [viewMode, setViewMode] = useState("table"); // 'table' or 'grid'
+  const [lockedDeptId, setLockedDeptId] = useState(null); // ID when departmentFilter is active
+  const [lockedDeptResolved, setLockedDeptResolved] = useState(!departmentFilter); // wait until resolved
+
+  // Resolve departmentFilter name → department _id once on mount
+  useEffect(() => {
+    if (!departmentFilter) return;
+    const resolve = async () => {
+      try {
+        const data = await getDepartments();
+        const depts = data.departments || [];
+        const filterLower = departmentFilter.toLowerCase();
+        const matched = depts.find(
+          (d) =>
+            d.name?.toLowerCase() === filterLower ||
+            d.code?.toLowerCase() === filterLower ||
+            // support common aliases
+            (filterLower === "technology" && (d.code?.toLowerCase() === "tech" || d.code?.toLowerCase() === "sd" || d.name?.toLowerCase() === "software development")) ||
+            (filterLower === "academic" && (d.code?.toLowerCase() === "acad" || d.code?.toLowerCase() === "ada" || d.name?.toLowerCase() === "academics")) ||
+            (filterLower === "human resources" && (d.code?.toLowerCase() === "hr" || d.name?.toLowerCase() === "hr")) ||
+            (filterLower === "finance" && (d.code?.toLowerCase() === "fin"))
+        );
+        if (matched) {
+          setLockedDeptId(matched._id);
+          setDepartment(matched._id);
+        }
+      } catch (err) {
+        console.error("Could not resolve department filter:", err);
+      } finally {
+        setLockedDeptResolved(true);
+      }
+    };
+    resolve();
+  }, [departmentFilter]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -29,6 +65,7 @@ const Employee = () => {
   }, [search]);
 
   const fetchEmployees = useCallback(async () => {
+    if (!lockedDeptResolved) return; // wait until dept ID is resolved
     try {
       setLoading(true);
       const data = await getEmployees({
@@ -47,17 +84,25 @@ const Employee = () => {
     } finally {
       setLoading(false);
     }
-  }, [debouncedSearch, department, status, currentPage]);
+  }, [debouncedSearch, department, status, currentPage, lockedDeptResolved]);
 
   useEffect(() => {
     fetchEmployees();
   }, [fetchEmployees]);
 
+  // Derive page title/subtitle from departmentFilter context
+  const pageTitle = departmentFilter
+    ? `${departmentFilter} Team`
+    : "Employee Management";
+  const pageSubtitle = departmentFilter
+    ? `${departmentFilter} department members (${totalEmployees} total)`
+    : `Manage staff and employee records (${totalEmployees} total)`;
+
   return (
     <div className="min-h-screen bg-slate-100 p-6 space-y-6">
       <Header
-        title="Employee Management"
-        subtitle={`Manage staff and employee records (${totalEmployees} total)`}
+        title={pageTitle}
+        subtitle={pageSubtitle}
         titleClassName="text-5xl font-extrabold tracking-tight text-white"
         subtitleClassName="mt-2 text-lg text-blue-100/90 font-normal"
         rightContent={
@@ -78,7 +123,9 @@ const Employee = () => {
             search={search}
             setSearch={setSearch}
             department={department}
-            setDepartment={setDepartment}
+            setDepartment={!lockedDeptId ? setDepartment : undefined}
+            lockedDeptId={lockedDeptId}
+            lockedDeptLabel={departmentFilter}
             status={status}
             setStatus={setStatus}
             setCurrentPage={setCurrentPage}

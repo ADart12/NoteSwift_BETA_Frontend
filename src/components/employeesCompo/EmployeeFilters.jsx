@@ -8,6 +8,8 @@ const EmployeeFilters = ({
   setRole,
   department,
   setDepartment,
+  lockedDeptId,
+  lockedDeptLabel,
   status,
   setStatus,
   setCurrentPage,
@@ -57,21 +59,32 @@ const EmployeeFilters = ({
           <option value="employee">Employee</option>
         </select>
 
-        <select
-          value={department || ""}
-          onChange={(e) => {
-            setDepartment(e.target.value);
-            setCurrentPage(1);
-          }}
-          className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="">All Departments</option>
-          {departments.map((dept) => (
-            <option key={dept._id} value={dept._id}>
-              {dept.name} ({dept.code})
-            </option>
-          ))}
-        </select>
+        {/* Department: locked badge or free dropdown */}
+        {lockedDeptId ? (
+          <div className="w-full border border-blue-200 rounded-lg px-4 py-3 bg-blue-50 flex items-center gap-2 text-blue-700 font-medium text-sm select-none">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 shrink-0 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            <span>{lockedDeptLabel} (Locked)</span>
+          </div>
+        ) : (
+
+          <select
+            value={department || ""}
+            onChange={(e) => {
+              if (setDepartment) setDepartment(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">All Departments</option>
+            {departments.map((dept) => (
+              <option key={dept._id} value={dept._id}>
+                {dept.name} ({dept.code})
+              </option>
+            ))}
+          </select>
+        )}
 
         <select
           value={status || ""}
@@ -92,7 +105,8 @@ const EmployeeFilters = ({
           onClick={() => {
             setSearch("");
             if (setRole) setRole("");
-            setDepartment("");
+            // Don't clear locked department
+            if (!lockedDeptId && setDepartment) setDepartment("");
             if (setStatus) setStatus("");
             setCurrentPage(1);
           }}

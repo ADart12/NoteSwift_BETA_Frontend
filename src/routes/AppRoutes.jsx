@@ -59,6 +59,39 @@ import ExpensesPage from "../pages/finance/ExpensesPage";
 import InvoicesPage from "../pages/finance/InvoicesPage";
 
 // =====================================================
+// SMART EMPLOYEES WRAPPER (auto-detects dept context)
+// =====================================================
+
+/**
+ * When an admin/CEO visits /employees they see ALL employees.
+ * When a tech manager visits /employees (Engineering Team), only Technology is shown.
+ */
+const EmployeesWithDeptContext = () => {
+  const { user } = useAuth();
+  const role = (user?.role || "").toLowerCase();
+
+  // Admins and CEOs see everyone
+  if (role === "admin" || role === "super_admin" || role === "ceo") {
+    return <Employees />;
+  }
+
+  // Tech manager → Engineering Team view (Technology only)
+  const deptName = (user?.department?.name || "").trim().toLowerCase();
+  const deptCode = (user?.department?.code || "").trim().toLowerCase();
+  if (
+    deptName === "technology" ||
+    deptName === "software development" ||
+    deptCode === "tech" ||
+    deptCode === "sd"
+  ) {
+    return <Employees departmentFilter="Technology" />;
+  }
+
+  // Any other manager hitting /employees → all employees
+  return <Employees />;
+};
+
+// =====================================================
 // PROTECTED ROUTE
 // =====================================================
 
@@ -230,7 +263,7 @@ const AppRoutes = () => {
           path="/employees"
           element={
             <RoleRoute allowedRoles={["admin", "manager"]}>
-              <Employees />
+              <EmployeesWithDeptContext />
             </RoleRoute>
           }
         />
@@ -320,7 +353,7 @@ const AppRoutes = () => {
           path="/hr/employees"
           element={
             <DepartmentRoute department="Human Resources">
-              <Employees />
+              <Employees departmentFilter="Human Resources" />
             </DepartmentRoute>
           }
         />
@@ -387,7 +420,7 @@ const AppRoutes = () => {
           path="/finance/employees"
           element={
             <DepartmentRoute department="Finance">
-              <Employees />
+              <Employees departmentFilter="Finance" />
             </DepartmentRoute>
           }
         />
@@ -472,7 +505,7 @@ const AppRoutes = () => {
           path="/academic/faculty"
           element={
             <DepartmentRoute department="Academic">
-              <Employees />
+              <Employees departmentFilter="Academic" />
             </DepartmentRoute>
           }
         />
